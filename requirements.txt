@@ -126,4 +126,5 @@ yarg==0.1.9
 pywin32==306
 Python==3.7
 pypiwin32==223
+pywin32==306
 
