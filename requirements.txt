@@ -3,6 +3,5 @@ Flask
 numpy
 scikit_learn
 gunicorn
-pickle
 seaborn
 matplotlib
