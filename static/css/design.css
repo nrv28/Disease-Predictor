@@ -1,0 +1,12 @@
+body{
+    background-color: chartreuse;
+}
+
+
+.box {
+    padding-top: 100px;
+    text-align: center;
+    height: 300px; /* Adjust the height as needed */
+}
+
+
