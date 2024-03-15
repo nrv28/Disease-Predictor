@@ -86,7 +86,7 @@ def predict():
     prediction_index = int(model.predict(input_data_reshaped))
     if 0 <= prediction_index < len(disease):
         predicted_disease = disease[prediction_index]
-        prediction_text = f'The predicted disease is: {predicted_disease}'
+        prediction_text = f'{predicted_disease}'
     else:
         prediction_text = "Unable to determine the predicted disease."
     return render_template('main.html',prediction_text=prediction_text)
