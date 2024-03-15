@@ -10,7 +10,7 @@
 <body>
 
     <div class="box">
-
+<div class="box2">
     <h1>Nirjay's Disease Predictor</h1>
 
     <form action="{{ url_for('predict')}}" method="post">
@@ -703,13 +703,56 @@
             <option value="yellow_crust_ooze">Yellow Crust Ooze</option>
         </select><br><br>
 
-<button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
+      <button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
 
     </form>
+</div>
 
-    <h2>{{ prediction_text }}</h2>
+<div class="box3">
+    <h3 id="result">Result : {{ prediction_text }}</h3>
+
+    <div class="search-more">
+        <h3>Know More about the Disease:</h3>
+        <form id="searchForm" action="https://www.google.com/search" method="GET" target="_blank">
+        <input id="searchInput" type="text" name="q" placeholder="Search..." hidden>
+        <button type="submit">Search</button>
+        </form>
+        </div>
+
+    <div class="search-health-centre">
+        <h3>Nearby Health Centre for this Disease:</h3>
+        <form id="searchForm2" action="https://www.google.com/search" method="GET" target="_blank">
+        <input id="searchInput2" type="text" name="q" placeholder="Search..." hidden>
+        <button type="submit2">Search</button>
+        </form>
+        </div>
 
 </div>
+
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var predictionText = "{{ prediction_text }}";
+        var searchInput = document.getElementById("searchInput");
+        if (predictionText) {
+            searchInput.value = predictionText;
+        }
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var predictionText = "{{ prediction_text }}";
+        var searchInput2 = document.getElementById("searchInput2");
+        if (predictionText) {
+            searchInput2.value =  ' Doctors For '+ predictionText + ' Near Me';
+        }
+    });
+</script>
+
 
 </body>
 </html>
