@@ -3,17 +3,33 @@ body {
     background: linear-gradient(115deg, #56d8e4 10%, #9f01ea 90%);
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 .box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 5rem;
     background-color: #fff;
     border-radius: 5px;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
                 rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 
                 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-    margin: 50px auto;
-    padding: 20px;
-    max-width: 500px;
+    margin: 4rem 10rem 2rem 10rem;
+    
+    padding: 1rem 5rem 1rem 10rem;
+    max-width: 1200px;
+}
+.box2{
+    width: 60%;
+}
+.box3{
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items:center;
+    gap: 6rem;
 }
 
 h1 {
@@ -58,7 +74,6 @@ button:hover {
     background-color: #0056b3;
 }
 
-h2 {
+#result {
     text-align: center;
-    color: #333;
 }
