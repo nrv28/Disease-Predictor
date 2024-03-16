@@ -9,8 +9,14 @@
 </head>
 <body>
 
+    <div class="navbar">
+        <a href="{{ url_for('features')}}">Features</a>
+        <a href="{{ url_for('about')}}">About</a>
+        <a href="{{ url_for('profile')}}">Profile</a>
+    </div>
+
     <div class="box">
-<div class="box2">
+     <div class="box2">
     <h1>Nirjay's Disease Predictor</h1>
 
     <form action="{{ url_for('predict')}}" method="post">
@@ -720,7 +726,7 @@
         </div>
 
     <div class="search-health-centre">
-        <h3>Nearby Health Centre for this Disease:</h3>
+        <h3>Nearby Health Centre:</h3>
         <form id="searchForm2" action="https://www.google.com/search" method="GET" target="_blank">
         <input id="searchInput2" type="text" name="q" placeholder="Search..." hidden>
         <button type="submit2">Search</button>
