@@ -10,6 +10,7 @@ model=pickle.load(open('model.pkl','rb'))
 def home():
     return render_template('main.html')
 
+
 @app.route('/about')
 def about():
     return render_template('about.html') 
@@ -19,10 +20,10 @@ def profile():
     return render_template('profile.html') 
 
 
-@app.route('/features')
-def features():
-    return render_template('features.html')  
-
+@app.route('/bmi')
+def bmi():
+    return render_template('bmi.html')               
+ 
 @app.route('/predict',methods=['POST','GET'])
 def predict():
     paramete = [str(x) for x in request.form.values()]
