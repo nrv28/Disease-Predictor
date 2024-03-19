@@ -1,13 +1,72 @@
-from flask import Flask, request , jsonify , render_template
+from flask import Flask, request , jsonify , render_template , flash , session , redirect
 import pickle
 import numpy as np
+from pymongo import MongoClient
+import bcrypt
 
 app = Flask(__name__)
+app.secret_key = '1232'
 model=pickle.load(open('model.pkl','rb'))
+
+
+client = MongoClient('mongodb+srv://nirjaykumargupta:FzXyb8IMbUn0aDU2@cluster0.paxkl7q.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+db = client['user_db']
+users = db['users']
 
 
 @app.route('/')
 def home():
+    return render_template('login.html')
+    
+
+@app.route('/login', methods=['POST'])
+def login():
+    if request.method == 'POST':
+        login_user = users.find_one({'username': request.form['username']})
+
+        if login_user:
+            if bcrypt.checkpw(request.form['password'].encode('utf-8'), login_user['password']):
+                session['username'] = request.form['username']
+                return render_template('main.html')
+        
+        flash('Incorrect Username or Password')
+        return render_template('login.html')
+
+    return render_template('login.html')
+
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    # Only start this when there is POST call otherwise simply return signup.html
+    # POST call will be made by signup form submission Form
+    if request.method == 'POST':
+        existing_user = users.find_one({'username': request.form['username']})
+        if existing_user:
+            flash('Username already exists')
+        else:
+            hashed_password = bcrypt.hashpw(request.form['password'].encode('utf-8'), bcrypt.gensalt())
+            users.insert_one({'username': request.form['username'], 'password': hashed_password})
+            flash('Account created successfully')
+            return render_template('login.html')
+    return render_template('signup.html')    
+
+
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+        username = session['username']  
+        password = "*********"
+        return render_template('profile.html', username=username , password=password)
+
+
+@app.route('/logout' , methods=['POST'])
+def logout():
+    session.pop('username', None)
+    flash('Logged Out successfully')
+    return render_template('login.html')  
+
+
+@app.route('/main')
+def main():
     return render_template('main.html')
 
 
@@ -15,15 +74,12 @@ def home():
 def about():
     return render_template('about.html') 
 
-@app.route('/profile')
-def profile():
-    return render_template('profile.html') 
-
 
 @app.route('/bmi')
 def bmi():
     return render_template('bmi.html')               
  
+
 @app.route('/predict',methods=['POST','GET'])
 def predict():
     paramete = [str(x) for x in request.form.values()]
@@ -104,6 +160,28 @@ def predict():
     else:
         prediction_text = "Unable to determine the predicted disease."
     return render_template('main.html',prediction_text=prediction_text)
+
+@app.route('/change_password', methods=['POST'])
+def change_password():
+    if 'username' in session:
+        if 'old_password' in request.form and 'new_password' in request.form:
+            old_password = request.form['old_password']
+            new_password = request.form['new_password']
+
+            user = users.find_one({'username': session['username']})
+            if user and bcrypt.checkpw(old_password.encode('utf-8'), user['password']):
+                new_hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+                users.update_one({'_id': user['_id']}, {'$set': {'password': new_hashed_password}})
+                flash('Password changed successfully')
+                return render_template('main.html')
+            else:
+                flash('Incorrect old password')
+        else:
+            flash(' ')
+    else:
+        flash('Session expired. Please log in again.')
+        return  render_template('login.html')
+    return  render_template('change_password.html')
 
 
 if __name__ == "__main__":
