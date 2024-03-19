@@ -3,9 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .user-info {
+            margin-bottom: 20px;
+        }
+        .user-info p {
+            margin: 10px 0;
+        }
+        .logout-btn {
+            text-align: center;
+            display: flex;
+            gap: 30px;
+            padding-left: 180px;
+        }
+        .logout-btn button {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        /* CSS for loader */
+        #loader {
+            display: none;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            margin-top: -25px; /* Half of the height */
+            margin-left: -25px; /* Half of the width */
+            z-index: 9999; /* Ensure the loader appears on top */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-      <h1>Under Development......</h1>
+    <div class="container">
+        <h1>Welcome to Dashboard</h1>
+        <div class="user-info">
+            <p><strong>Username:</strong> {{ username }}</p>
+            <p><strong>Password:</strong> {{ password }}</p>
+        </div>
+        <div class="logout-btn">
+            <form id="logout-form" action="{{ url_for('logout') }}" method="post">
+                <button type="submit" id="logout-btn">Logout</button>
+            </form>
+
+            <form action="{{ url_for('change_password') }}" method="post">
+                <button type="submit">Change Password</button>
+            </form>
+        </div>
+        
+    </div>
+
+    <!-- Loader HTML -->
+    <div id="loader" class="loader"></div>
+
+    <script>
+        // JavaScript for displaying loader on logout button click
+        document.getElementById('logout-form').addEventListener('submit', function() {
+            document.getElementById('loader').style.display = 'block'; // Display loader
+        });
+    </script>
 </body>
 </html>

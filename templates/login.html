@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(115deg, #56d8e4 10%, #9f01ea 90%);
+        }
+
+        .container {
+            width: 300px;
+            margin: 100px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative; /* added */
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            box-sizing: border-box;
+            border: none;
+            border-radius: 5px;
+            background-color: #4caf50;
+            color: #fff;
+            cursor: pointer;
+            position: relative; /* added */
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .new-account {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .new-account a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .new-account a:hover {
+            text-decoration: underline;
+        }
+
+        /* Added CSS for flash messages */
+        .flash-error {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: xx-large;
+        }
+
+        /* Loading animation */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: calc(50% - 15px); /* Center horizontally */
+            transform: translateY(-50%); /* Center vertically */
+            z-index: 999; /* added to ensure it's above other elements */
+            display: none; /* hide by default */
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id="heading">Welcome to Healthy Manav</h1>
+    <div class="container">
+        <h2>Login</h2>
+        <form action="{{ url_for('login')}}" method="POST">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input id="loginButton" type="submit" value="Login"> <!-- added an ID to the login button -->
+        </form>
+        <div class="new-account">
+            <p>Don't have an account? <a href="{{ url_for('signup')}}">Create New Account</a></p>
+        </div>
+
+        <div class="loader"></div> <!-- Loader -->
+
+        <br>
+        <br>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    </div>
+    <script>
+        // Show loader when login button is clicked
+        document.getElementById("loginButton").addEventListener("click", function () {
+            document.querySelector(".loader").style.display = "block";
+        });
+    </script>
+</body>
+
+</html>
