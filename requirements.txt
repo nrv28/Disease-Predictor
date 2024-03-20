@@ -7,6 +7,4 @@ seaborn
 matplotlib
 pymongo
 bcrypt
-os
-io
 base64
