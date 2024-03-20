@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <style>
-        body {
+          body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background: linear-gradient(115deg, #56d8e4 10%, #9f01ea 90%);
         }
         .container {
             max-width: 600px;
@@ -54,25 +55,62 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            margin-top: -25px; /* Half of the height */
-            margin-left: -25px; /* Half of the width */
-            z-index: 9999; /* Ensure the loader appears on top */
+            margin-top: -25px; 
+            margin-left: -25px; 
+            z-index: 9999; 
         }
 
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .user-info-container {
+            display: flex;
+            align-items: flex-start; /* Align items at the top */
+            justify-content: space-between; /* Space between elements */
+        }
+
+        .profile-photo {
+            width: 150px; 
+            height: 150px; 
+            object-fit: cover; 
+            /* padding-top: 10px; */
+            padding-left: 70px;
+            margin: 0 auto; 
+            display: block; 
+            margin-bottom: 10px; 
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Welcome to Dashboard</h1>
-        <div class="user-info">
-            <p><strong>Username:</strong> {{ username }}</p>
-            <p><strong>Password:</strong> {{ password }}</p>
+        <div class="user-info-container">
+            <div class="user-info">
+                <p><strong>Username:</strong> {{ username }}</p>
+                <p><strong>Password:</strong> {{ password }}</p>
+                <p><strong>Name:</strong> {{ name }}</p>
+                <p><strong>Email:</strong> {{ email }}</p>
+                <p><strong>Contact:</strong> {{ contact }}</p>
+                <p><strong>Address:</strong> {{ address }}</p>
+            </div>
+            <!-- Display the profile photo -->
+            <div class="profile-photo">
+                {% if photo_base64 %}
+                <img src="data:image/jpeg;base64,{{ photo_base64 }}" alt="Profile Photo" class="profile-photo">
+                {% endif %}
+            </div>
         </div>
+
+
+
         <div class="logout-btn">
+            <form id="delete-form" action="{{ url_for('delete_account') }}" method="post">
+                <button type="submit" id="delete-btn">Delete Account</button>
+            </form>
+
             <form id="logout-form" action="{{ url_for('logout') }}" method="post">
                 <button type="submit" id="logout-btn">Logout</button>
             </form>
@@ -80,8 +118,12 @@
             <form action="{{ url_for('change_password') }}" method="post">
                 <button type="submit">Change Password</button>
             </form>
+
+            <!-- Add button for Edit Profile -->
+            <form action="{{ url_for('edit_profile') }}" method="post">
+                <button type="submit">Edit Profile</button>
+            </form>
         </div>
-        
     </div>
 
     <!-- Loader HTML -->
@@ -90,8 +132,9 @@
     <script>
         // JavaScript for displaying loader on logout button click
         document.getElementById('logout-form').addEventListener('submit', function() {
-            document.getElementById('loader').style.display = 'block'; // Display loader
+            document.getElementById('loader').style.display = 'block';
         });
     </script>
 </body>
 </html>
+
