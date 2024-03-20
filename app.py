@@ -3,6 +3,9 @@ import pickle
 import numpy as np
 from pymongo import MongoClient
 import bcrypt
+import os
+import io
+import base64
 
 app = Flask(__name__)
 app.secret_key = '1232'
@@ -53,9 +56,37 @@ def signup():
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
+    if 'username' in session:
         username = session['username']  
-        password = "*********"
-        return render_template('profile.html', username=username , password=password)
+
+        # Assuming you're using PyMongo
+        user = users.find_one({'username': username})
+        if user:
+            name = user.get('name', '')
+            contact = user.get('contact', '')
+            address = user.get('address', '')
+            email = user.get('email', '')
+            photo_data = user.get('photo_data')
+            password = "*********"
+
+            # Convert binary photo data to Base64
+            if photo_data:
+                photo_base64 = base64.b64encode(photo_data).decode('utf-8')
+            else:
+                photo_base64 = None
+
+            return render_template('profile.html', username=username, password = password ,name=name, contact=contact, address=address, email=email, photo_base64=photo_base64)
+        else:
+            name = ''
+            contact = ''
+            address = ''
+            email = ''
+            photo_base64 = None
+
+        return render_template('profile.html', username=username, password=password, name=name, contact=contact, address=address, email=email)
+    else:
+        flash('Session expired. Please log in again.')
+        return redirect(url_for('login'))
 
 
 @app.route('/logout' , methods=['POST'])
@@ -161,28 +192,83 @@ def predict():
         prediction_text = "Unable to determine the predicted disease."
     return render_template('main.html',prediction_text=prediction_text)
 
+
 @app.route('/change_password', methods=['POST'])
 def change_password():
     if 'username' in session:
-        if 'old_password' in request.form and 'new_password' in request.form:
+        if 'old_password' in request.form and 'new_password' in request.form and 'confirm_password' in request.form:
             old_password = request.form['old_password']
             new_password = request.form['new_password']
+            confirm_password = request.form['confirm_password']
+
+            if new_password != confirm_password:
+                flash('New password and confirm password do not match')
+                return render_template('change_password.html')
 
             user = users.find_one({'username': session['username']})
             if user and bcrypt.checkpw(old_password.encode('utf-8'), user['password']):
                 new_hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
                 users.update_one({'_id': user['_id']}, {'$set': {'password': new_hashed_password}})
                 flash('Password changed successfully')
-                return render_template('main.html')
+                # return render_template('main.html')
             else:
                 flash('Incorrect old password')
         else:
-            flash(' ')
+            flash('All fields are required')
     else:
         flash('Session expired. Please log in again.')
-        return  render_template('login.html')
-    return  render_template('change_password.html')
+        return redirect(url_for('login'))
+    return render_template('change_password.html')
 
+
+@app.route('/edit_profile', methods=['POST'])
+def edit_profile():
+    if 'username' in session:
+        if 'name' in request.form and 'email' in request.form and 'address' in request.form and 'contact' in request.form:
+            name = request.form['name']
+            email = request.form['email']
+            address = request.form['address']
+            contact = request.form['contact']
+
+            if 'photo' in request.files:
+                photo = request.files['photo']
+                if photo.filename != '':
+                    # Read the photo content
+                    photo_data = photo.read()
+
+                    # Assuming you're using PyMongo
+                    user = users.find_one({'username': session['username']})
+                    if user:
+                        users.update_one({'_id': user['_id']}, {'$set': {'name': name, 'email': email, 'address': address, 'contact': contact, 'photo_data': photo_data}})
+                        flash('Profile updated successfully')
+                    else:
+                        flash('User not found')
+
+            else:
+                flash('No file part')
+
+    else:
+        flash('Session expired. Please log in again.')
+        return render_template('login')
+
+    return render_template('edit.html')
+     
+@app.route('/delete_account', methods=['POST'])
+def delete_account():
+    if 'username' in session:
+        
+        user = users.find_one({'username': session['username']})
+        if user:
+            
+            users.delete_one({'_id': user['_id']})
+            flash('Your account has been deleted.')
+            session.pop('username') 
+            return render_template('login.html')
+        else:
+            flash('User not found.')
+    else:
+        flash('Session expired. Please log in again.')
+    return render_template('login.html')     
 
 if __name__ == "__main__":
     app.run()
