@@ -3,9 +3,22 @@ import pickle
 import numpy as np
 from pymongo import MongoClient
 import bcrypt
-import os
-import io
+# import os
+# import io
 import base64
+
+# Gemini Link Start-------------------------------------------------------------------------------------------------------------------
+import pathlib
+import textwrap
+import google.generativeai as genai
+from IPython.display import display
+from IPython.display import Markdown
+
+genai.configure(api_key="AIzaSyBUoLKXHrk6Ka8pOoCtVpP6DIYT6zArvqs")
+
+model2 = genai.GenerativeModel('gemini-pro')
+# Gemini Link Ends------------------------------------------------------------------------------------------------------------------
+
 
 app = Flask(__name__)
 app.secret_key = '1232'
@@ -269,6 +282,24 @@ def delete_account():
     else:
         flash('Session expired. Please log in again.')
     return render_template('login.html')     
+
+
+@app.route('/copilot')
+def copilot():
+    return render_template('chat.html')
+
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    if request.method == 'POST':
+        user_query = request.form['user_query']  # Get user's input from the form
+
+        # Generate response using Gemini AI model
+        response = model2.generate_content(user_query)
+        gemini_response = response.text
+
+        return gemini_response
+       
 
 if __name__ == "__main__":
     app.run()
