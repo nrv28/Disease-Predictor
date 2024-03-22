@@ -7,3 +7,6 @@ seaborn
 matplotlib
 pymongo
 bcrypt
+pathlib
+textwarp
+google.generativeai
