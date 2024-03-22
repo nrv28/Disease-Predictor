@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthy Manav Copilot</title>
+    <style>
+        body {
+            background: linear-gradient(115deg, #56d8e4 10%, #9f01ea 90%);
+        }
+
+        #chat-container {
+            width: 80%; /* Increased width */
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 5px;
+            background: linear-gradient(115deg, #56d8e4 10%, #9f01ea 90%); /* Gradient background */
+        }
+
+        #conversation {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+            overflow-y: scroll;
+            max-height: 300px;
+        }
+
+        #user-message, #gemini-message {
+            margin-bottom: 10px;
+        }
+
+        #user-message strong, #gemini-message strong {
+            font-weight: bold;
+        }
+
+        #chat-input {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        #chat-input input[type="text"] {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        /* Styling for buttons */
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .loader {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 2s linear infinite;
+            margin-left: 5px;
+            display: none; /* Hide by default */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <h1>Chat with Healthy Manav Copilot Nirjay</h1>
+
+        <!-- Chat conversation -->
+        <div id="conversation"></div>
+
+        <!-- Chat input -->
+        <div id="chat-input">
+            <input type="text" id="user-query" placeholder="Type your query here..." autocomplete="off">
+            <button id="send-button" disabled>Ask Copilot Nirjay</button>
+            <div class="loader"></div> 
+        </div>
+        <br>
+        <button id="stop-button" disabled>Stop</button>
+    </div>
+</body>
+         <script src="{{ url_for('static', filename='scripts/scripts.js') }}"></script>
+</html>
