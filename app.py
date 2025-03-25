@@ -14,9 +14,9 @@ import google.generativeai as genai
 from IPython.display import display
 from IPython.display import Markdown
 
-genai.configure(api_key="AIzaSyBUoLKXHrk6Ka8pOoCtVpP6DIYT6zArvqs")
+genai.configure(api_key="AIzaSyA4PcElnH7HV-wVp4ppHcBqbw_IxScC4Zw")
 
-model2 = genai.GenerativeModel('gemini-pro')
+model2 = genai.GenerativeModel('gemini-2.0-flash')
 # Gemini Link Ends------------------------------------------------------------------------------------------------------------------
 
 
